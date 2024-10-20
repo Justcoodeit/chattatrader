@@ -130,19 +130,20 @@ const Wallet = ({ userInfo }) => {
 
   return (
     <div className='h-full flex flex-col p-2 sm:p-6 space-y-4 sm:space-y-6 bg'>
-      <div className='flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4 bg-[#0487E2] rounded-xl p-4 sm:p-8'>
+      <div className='flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4 bg-[#008080] rounded-xl p-4 sm:p-8'>
         <div className='flex flex-col w-full sm:w-auto'>
           <div className='flex items-center gap-4 mb-4'>
-            <div className='w-[60px] h-[60px] bg-[#B0D6F5] rounded-full flex items-center justify-center'>
+            {/* <div className='w-[60px] h-[60px] bg-[#B0D6F5] rounded-full flex items-center justify-center'>
               <img src={user} className='w-[36px] h-[28.22px]' alt='Solana' />
-            </div>
+            </div> */}
             <div className='flex flex-col items-start text-white'>
-              {/* <p>Name</p> */}
-              <div className='flex gap-6 '>
-                <p className=' text-black'>Wallet Address:</p>
-                <div className='text-black bg-[#FFFDD2] rounded-sm p-1'>
-                  {solWalletAddress}
-                </div>
+              <p className='text-[#FFFFFF] font-medium'>ChatterTrade Balance</p>
+              <div className='text-[#fff] rounded-sm p-1'>
+                <p className='text-3xl flex  '>
+                  $12,455.00
+                  <span className='text-sm font-medium '>{'Sol'}</span>
+                </p>
+                {/* {solWalletAddress} */}
               </div>
             </div>
           </div>
@@ -196,63 +197,6 @@ const Wallet = ({ userInfo }) => {
           <PNLAnalysis />
         </div>
       </div>
-
-      {/* <div className='flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6'>
-        <div className='w-full '>
-          <div className='w-full  bg-white rounded-lg shadow p-4 sm:p-6'>
-            <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4'>
-              <h2 className='text-xl font-bold mb-2 sm:mb-0'>Portfolio</h2>
-              <div className='flex border border-[#32405433] h-[30px] w-full sm:w-[194px]'>
-                <button className='bg-transparent text-xs text-black focus:bg-[#B0D6F5] w-full hover:border-[#B0D6F5] p-0 rounded-none'>
-                  All Asset
-                </button>
-                <button className='bg-[#32405433] w-full text-black text-xs p-0 rounded-none focus:bg-[#B0D6F5] hover:border-[#B0D6F5]'>
-                  Watchlist
-                </button>
-              </div>
-            </div>
-
-            <div className='overflow-x-auto'>
-              <table className='w-full'>
-                <thead>
-                  <tr className='text-left text-gray-600'>
-                    <th>Asset</th>
-                    <th>Balance</th>
-                    <th>Buy Price</th>
-                    <th>Profit</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {portfolioData.map((item, index) => (
-                    <tr key={index} className='border-b'>
-                      <td className='py-2 flex items-center gap-2'>
-                        <div>
-                          <img
-                            src={`/images/${item.asset.toLowerCase()}.png`}
-                            alt={item.asset}
-                          />
-                        </div>
-                        <div className='text-black'>{item.asset}</div>
-                        <div className='text-sm text-gray-500'>
-                          {item.symbol}
-                        </div>
-                      </td>
-                      <td className='text-black'>{item.balance}</td>
-                      <td className='text-black'>{item.buyPrice}</td>
-                      <td className='text-green-500'>{item.profit}</td>
-                      <td className='text-black'>{item.value}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <h2 className='text-xl font-bold mb-4'>Price Chart</h2>
-          <CandleStick />
-        </div>
-      </div> */}
 
       <div className='flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6'>
         <div className='w-full  bg-white rounded-lg shadow p-4 sm:p-6'>
@@ -326,16 +270,6 @@ const Wallet = ({ userInfo }) => {
           </div>
         </div>
       </div>
-      {/* <div className=' flex justify-center  flex-col'>
-        <div className='flex'>
-          <div className='basis-[70%]'>
-            <RegisteredUsers />
-          </div>
-          <div className='basis-[30%]'>
-            <WalletDetails />
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 };

@@ -33,6 +33,7 @@ import {
   SelectedWallet,
 } from '../data/Icons';
 import ChatHistorySection from '../component/ui/ChatHistorySection';
+import Discovery from './Discovery/Discovery';
 
 const Notification = () => <div>Notification Component</div>;
 const Settings = () => <div>Settings Component</div>;
@@ -51,6 +52,16 @@ export function SidebarDemo() {
   const chatHistory = getSingleChat?.data?.data?.caHistory;
 
   const links = [
+    {
+      label: 'Discovery',
+      //   href: '/notification',
+      icon: (
+        <IconBellRinging
+        // className='text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0'
+        />
+      ),
+      component: Discovery,
+    },
     {
       label: 'Chat',
       //   href: '/chat',
@@ -78,7 +89,7 @@ export function SidebarDemo() {
     },
     // {
     //   label: 'Notification',
-    // //   href: '/notification',
+    //   //   href: '/notification',
     //   icon: (
     //     <IconBellRinging className='text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0' />
     //   ),
@@ -286,7 +297,12 @@ export const Logo = () => {
         animate={{ opacity: 1 }}
         className=' font-black text-3xl  whitespace-pre'
       >
-        Chattatrader
+        <div className='flex justify-center items-center leading-6'>
+          <h1 className='text-3xl'>
+            <span className='text-[#008080] font-bold'>Chatter</span>
+            <span className=' text-[#E6E21A] font-bold'>Trade</span>
+          </h1>
+        </div>
       </motion.span>
     </Link>
   );

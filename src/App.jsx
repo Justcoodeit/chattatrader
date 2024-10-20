@@ -52,10 +52,9 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      {/* <Route path='/signup' element={<Signup />} /> */}
       <Route
         path='/login'
-        element={isAuthenticated ? <Navigate to='/' /> : < Auth/>}
+        element={isAuthenticated ? <Navigate to='/' /> : <Auth />}
       />
       <Route
         path='/'
