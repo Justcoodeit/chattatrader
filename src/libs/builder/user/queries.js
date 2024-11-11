@@ -35,6 +35,13 @@ export function useGetUserInfo() {
     queryFn: user_requests_builder.use().user.user_info,
   });
 }
+
+export function useGetTrendingTokens() {
+  return useQuery({
+    queryKey: user_requests_builder.tokens.get_trending_tokens.get(),
+    queryFn: user_requests_builder.use().tokens.get_trending_tokens,
+  });
+}
 // export function useGetTaskHistory() {
 //   return useQuery({
 //     queryKey: user_requests_builder.user.task_history.get(),
@@ -48,13 +55,6 @@ export function useGetProfileInformation(id) {
     enabled: !!id,
   });
 }
-
-// export function useGetLeaderboard() {
-//   return useQuery({
-//     queryKey: user_requests_builder.user.leaderboard.get(),
-//     queryFn: user_requests_builder.use().user.leaderboard,
-//   });
-// }
 
 // export function useGetPoints() {
 //   return useQuery({

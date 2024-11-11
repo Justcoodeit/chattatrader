@@ -3,6 +3,10 @@ export const ENDPOINTS = Object.freeze({
     register: () => '/users/register',
     login: () => '/users/login',
   },
+  tokens: {
+    trendingToken: () => '/tokens/trending',
+  },
+
   tasks: {
     base: () => '/tasks/',
     single: (task_id) => `/tasks/${task_id}`,
@@ -23,6 +27,7 @@ export const ENDPOINTS = Object.freeze({
     create_chat: () => '/chats/createchat',
     create_buy: () => '/chats/buy',
     delete_chat: () => '/deletechat',
+    get_history: (userId) => `/transactions/history/${userId}`,
     get_chat: (userId) => `/chats/getchats?userId=${userId}`,
     get_single_chat: (chatId) => `/chats/getchat?chatId=${chatId}`,
     get_user: (userId) => `/users/getuser?userId=${userId}`,
@@ -39,4 +44,4 @@ export const ENDPOINTS = Object.freeze({
   },
 });
 
-export const BASE_URL = 'https://api.chattatrader.com';
+export const BASE_URL = 'https://18.130.216.255/';

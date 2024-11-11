@@ -33,13 +33,16 @@ export const user_requests_builder = createBuilder({
     create_buy: (ChatData) => {
       return _axios.post(ENDPOINTS.user.create_buy(), ChatData);
     },
-
+    user_history: () => _axios.get(ENDPOINTS.user.get_history()),
     user_info: () => _axios.get(ENDPOINTS.user.get_user()),
     delete_chat: (id) => _axios.get(ENDPOINTS.user.delete_chat(id)),
     points: () => _axios.get(ENDPOINTS.user.points()),
     get_all_chat: (id) => _axios.get(ENDPOINTS.user.get_chat(id)),
     get_single_chat: (chatId) =>
       _axios.get(ENDPOINTS.user.get_single_chat(chatId)),
+  },
+  tokens: {
+    get_trending_tokens: () => _axios.get(ENDPOINTS.tokens.trendingToken()),
   },
   referral: {
     generate_code: () => _axios.post(ENDPOINTS.user.referral.generate_code()),

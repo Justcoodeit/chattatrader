@@ -1,16 +1,15 @@
-import React from 'react';
-import {
-  FaApple,
-  FaDiscord,
-  FaLinode,
-  FaPlus,
-  FaTwitter,
-} from 'react-icons/fa';
+import { FaLinode, FaPlus } from 'react-icons/fa';
 import { BiTransfer } from 'react-icons/bi';
 import { Eye } from 'lucide-react';
 import RecentContacts from './Contact';
 import TrendingCard from './TrendingCard/TrendingCard';
 import RecentActivities from './RecentActivities/RecentActivities';
+import CustomSelect from '../../component/CustomSelect';
+import { chartIcon, foryouIcon } from '../../assets';
+import {
+  useGetTrendingTokens,
+  useGetUserInfo,
+} from '../../libs/builder/user/queries';
 
 const stats = [
   { label: 'Market Cap', value: '$734.00', discount: '+23.6%' },
@@ -18,55 +17,64 @@ const stats = [
   { label: 'Available Margin', value: '$1,734.00', discount: '+23.6%' },
 ];
 
-  const trendingData = [
-    {
-      rank: 1,
-      category: 'SWAPS',
-      blockchain: 'Solana',
-      token: 'wstETH',
-      price: '+278.89%',
-      users: '3487',
-      volume: '$06.078 348ETH',
-      topSales: [
-        { amount: '4ETH SELL', time: '11hrs ago' },
-        { amount: '4ETH SELL', time: '11hrs ago' },
-        { amount: '4ETH SELL', time: '11hrs ago' },
-        { amount: '4ETH SELL', time: '11hrs ago' },
-      ],
-    },
-    {
-      rank: 1,
-      category: 'SWAPS',
-      blockchain: 'Ethereum',
-      token: 'wstETH',
-      price: '+278.89%',
-      users: '3487',
-      volume: '$06.078 348ETH',
-      topSales: [
-        { amount: '4ETH SELL', time: '11hrs ago' },
-        { amount: '4ETH SELL', time: '11hrs ago' },
-        { amount: '4ETH SELL', time: '11hrs ago' },
-        { amount: '4ETH SELL', time: '11hrs ago' },
-      ],
-    },
-    {
-      rank: 1,
-      category: 'NFT SALES',
-      blockchain: 'Ethereum',
-      token: 'wstETH',
-      price: '+278.89%',
-      users: '3487',
-      volume: '$06.078 348ETH',
-      topSales: [
-        { amount: '4ETH SELL', time: '11hrs ago' },
-        { amount: '4ETH SELL', time: '11hrs ago' },
-        { amount: '4ETH SELL', time: '11hrs ago' },
-        { amount: '4ETH SELL', time: '11hrs ago' },
-      ],
-    },
-  ];
+const trendingData = [
+  {
+    rank: 1,
+    category: 'SWAPS',
+    blockchain: 'Solana',
+    token: 'wstETH',
+    price: '+278.89%',
+    users: '3487',
+    volume: '$06.078 348ETH',
+    topSales: [
+      { amount: '4ETH SELL', time: '11hrs ago' },
+      { amount: '4ETH SELL', time: '11hrs ago' },
+      { amount: '4ETH SELL', time: '11hrs ago' },
+      { amount: '4ETH SELL', time: '11hrs ago' },
+    ],
+  },
+  {
+    rank: 1,
+    category: 'SWAPS',
+    blockchain: 'Ethereum',
+    token: 'wstETH',
+    price: '+278.89%',
+    users: '3487',
+    volume: '$06.078 348ETH',
+    topSales: [
+      { amount: '4ETH SELL', time: '11hrs ago' },
+      { amount: '4ETH SELL', time: '11hrs ago' },
+      { amount: '4ETH SELL', time: '11hrs ago' },
+      { amount: '4ETH SELL', time: '11hrs ago' },
+    ],
+  },
+  {
+    rank: 1,
+    category: 'NFT SALES',
+    blockchain: 'Ethereum',
+    token: 'wstETH',
+    price: '+278.89%',
+    users: '3487',
+    volume: '$06.078 348ETH',
+    topSales: [
+      { amount: '4ETH SELL', time: '11hrs ago' },
+      { amount: '4ETH SELL', time: '11hrs ago' },
+      { amount: '4ETH SELL', time: '11hrs ago' },
+      { amount: '4ETH SELL', time: '11hrs ago' },
+    ],
+  },
+];
 
 function Discovery() {
+  const categories = ['All Categories', 'Solana'];
+  const categories1 = ['Solana'];
+
+  const { data: userInfo } = useGetUserInfo();
+
+  const { data } = useGetTrendingTokens();
+
+  console.log(data);
+
   return (
     <div className=''>
       <div className='flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4 bg-[#008080] rounded-xl p-4 sm:p-8'>
@@ -135,11 +143,74 @@ function Discovery() {
         </div>
       </div>
       <RecentContacts />
-      <div className='flex justify-between'>
-        <div className='flex gap-4'>
-          {trendingData.map((card, index) => (
-            <TrendingCard key={index} {...card} />
-          ))}
+
+      <div className='flex justify-between '>
+        <div className='mb-4 flex flex-col w-full p-5'>
+          <p className=' text-[#393939] text-[26px]'>
+            See what’s happening on ChatterTrade
+          </p>
+          <div className='flex w-full items-center justify-between'>
+            <div className='flex gap-4 items-center'>
+              <div className='flex w-[113px] p-3 h-[36px] font-semibold items-center gap-2 bg-[#D5FFFF] text-[#008080]'>
+                <img src={chartIcon} className='w-5 h-auto' alt='' />
+                <p>Popular</p>
+              </div>
+              <div className='flex p-4 items-center gap-2'>
+                <img src={foryouIcon} className='w-5 h-auto' alt='' />
+                <p>Hot</p>
+              </div>
+              <div className='flex p-4 items-center gap-2'>
+                <img src={foryouIcon} className='w-7 h-auto' alt='' />
+                <p className='flex w-full'>For you</p>
+              </div>
+            </div>
+            <div className='flex gap-2 '>
+              <div>
+                <CustomSelect options={categories} label='Categories' />
+              </div>
+              <div>
+                <CustomSelect options={categories1} label='Categories' />
+              </div>
+            </div>
+          </div>
+
+          <div className='flex gap-4 flex-col'>
+            <div className='flex flex-col'>
+              <div className='flex gap-5'>
+                <p>#1 SWAPS</p>
+                <div>
+                  <p>Solana</p>
+                </div>
+              </div>
+              <div>
+                <p>wstETH</p>
+              </div>
+            </div>
+            <div className='flex gap-6'>
+              <div className='flex flex-col'>
+                <p className=''>
+                  Price <span className='text-[#008080]'>+278.89%</span>
+                </p>
+                <p className=' font-bold'>$06.078</p>
+              </div>
+              <div className='flex flex-col'>
+                <p className=''>Users</p>
+                <p className=' font-bold'>3487</p>
+              </div>
+              <div className='flex flex-col'>
+                <p className=''>Volume 24hrs</p>
+                <p className=' font-bold'>348ETH</p>
+              </div>
+            </div>
+            <div className=' '>
+              <h1 className=' text-base '>Top Sale</h1>
+              <div className='flex gap-5'>
+                {trendingData.map((card, index) => (
+                  <TrendingCard key={index} {...card} />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
         <div className='w-1/3'>
           <RecentActivities />
@@ -150,7 +221,3 @@ function Discovery() {
 }
 
 export default Discovery;
-
-
-
-

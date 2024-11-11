@@ -68,9 +68,13 @@ const RecentActivities = () => {
 
   return (
     <div className='bg-white rounded-lg shadow-md p-4'>
-      <div className='flex justify-between items-center mb-4'>
-        <h2 className='text-xl font-bold'>Recent Activities</h2>
-        <button className='text-blue-500 hover:underline'>View all</button>
+      <div className='flex justify-between items-center '>
+        <h2 className='text-xl font-bold text-[#393939]'>Recent Activities</h2>
+        <button className='text-[#E6E21A] hover:underline'>View all</button>
+      </div>
+      <div className='flex justify-between items-center '>
+        <h2 className='text-xl font-bold text-[#393939]'>Transaction</h2>
+        <button className='text-[#393939]'>Total</button>
       </div>
       <div className='max-h-96 overflow-y-auto'>
         {activities.map((activity, index) => (
