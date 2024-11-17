@@ -18,6 +18,7 @@ export default defineConfig({
     exclude: [],
   },
   optimizeDeps: {
+    // exclude: ['path', 'fs', 'url', 'source-map-js'],
     esbuildOptions: {
       loader: {
         '.js': 'jsx',

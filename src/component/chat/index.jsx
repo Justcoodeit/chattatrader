@@ -1,7 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Card, CardContent } from '../ui/Card';
+import { Skeleton } from '../ui/Skeleton';
+import { ScrollArea } from '../ui/scroll-area';
+import { AlertCircle, Bot, ArrowDown } from 'lucide-react';
+import { Button } from '../ui/button';
 import Message from '../message';
-
-import { AlertCircle } from 'lucide-react';
 
 function ChatMessage({
   chatData,
@@ -12,52 +15,117 @@ function ChatMessage({
   userId,
   chatId,
 }) {
-  const historyMessages = chatHistory?.data?.data?.messages || [];
   const ongoingMessages = chatData || [];
-  const chatEndRef = useRef(null); // Create a ref for the chat end
+  const chatEndRef = useRef(null);
+  const scrollAreaRef = useRef(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  useEffect(() => {
+    const scrollArea = scrollAreaRef.current;
+    if (!scrollArea) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = scrollArea;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+      setShowScrollButton(!isNearBottom);
+    };
+
+    scrollArea.addEventListener('scroll', handleScroll);
+    return () => scrollArea.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [historyMessages, ongoingMessages]);
+  }, [ongoingMessages]);
 
-  return (
-    <div className='flex-1 overflow-y-auto scrollbar-hide w-full space-y-4'>
-      {/* Display chat history */}
-      {/* {historyMessages.map((message, index) => (
-        <Message key={`history-${index}`} message={message} isHistory={true} />
-      ))} */}
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-      {/* Display ongoing chat */}
-      {ongoingMessages.map((message, index) => (
-        <Message
-          key={`ongoing-${index}`}
-          message={message}
-          isHistory={false}
-          isLoading={isLoading}
-          isError={isError}
-          sendMessage={sendMessage}
-          userId={userId}
-          chatId={chatId}
-        />
-      ))}
-
-      {/* Scroll reference for the end of the chat */}
-      <div ref={chatEndRef} />
-
-      {/* Display loading or error states */}
-      {/* {isLoading && <LoadingIcons/>} */}
-      {isError && (
-        <div className='relative mx-auto max-w-md mt-4'>
-          <div className='absolute inset-2 bottom-0 rounded-4xl ring-1 ring-inset ring-black/5 bg-[linear-gradient(115deg,var(--tw-gradient-stops))] from-[#fff1be] from-[28%] via-[#ee87cb] via-[70%] to-[#b060ff] sm:bg-[linear-gradient(145deg,var(--tw-gradient-stops))]' />
-          <div className='relative flex items-center p-6 text-sm text-gray-900 rounded-4xl bg-white/80 backdrop-blur-sm'>
-            <AlertCircle className='flex-shrink-0 w-6 h-6 mr-3 text-red-600' />
-            <div>
-              <span className='font-semibold'>Server Error!</span> An unexpected
-              error occurred. Please try again later.
-            </div>
+  const LoadingSkeleton = () => (
+    <div className='space-y-6'>
+      {[...Array(3)].map((_, i) => (
+        <div key={i} className='flex items-start gap-3 mx-4'>
+          <Skeleton className='h-8 w-8 rounded-full' />
+          <div className='space-y-2'>
+            <Skeleton className='h-16 w-[250px]' />
+            <Skeleton className='h-4 w-[100px]' />
           </div>
         </div>
+      ))}
+    </div>
+  );
+
+  const ErrorMessage = () => (
+    <Card className='mx-auto max-w-md bg-destructive/10 border-destructive'>
+      <CardContent className='flex items-center p-4'>
+        <AlertCircle className='h-5 w-5 text-destructive mr-2 shrink-0' />
+        <p className='text-sm text-destructive'>
+          An unexpected error occurred. Please try again later.
+        </p>
+      </CardContent>
+    </Card>
+  );
+
+  const NoMessagesPlaceholder = () => (
+    <div className='flex flex-col items-center justify-center h-full space-y-4 text-center p-8'>
+      <div className='rounded-full bg-primary/10 p-4'>
+        <Bot className='h-8 w-8 text-primary' />
+      </div>
+      <div className='space-y-2'>
+        <h3 className='font-semibold text-xl'>Welcome to ChatTrader</h3>
+        <p className='text-muted-foreground text-sm max-w-sm'>
+          Start your conversation by sending a message. Ask about market
+          analysis, trading strategies, or get real-time token information.
+        </p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className='relative flex flex-col h-full'>
+      <ScrollArea ref={scrollAreaRef} className='flex-1 py-4' type='hover'>
+        {isLoading ? (
+          <LoadingSkeleton />
+        ) : ongoingMessages.length === 0 ? (
+          <NoMessagesPlaceholder />
+        ) : (
+          <div className='space-y-6'>
+            {ongoingMessages.map((message, index) => (
+              <Message
+                key={`ongoing-${index}`}
+                message={message}
+                isHistory={false}
+                isLoading={isLoading}
+                sendMessage={sendMessage}
+                userId={userId}
+                chatId={chatId}
+              />
+            ))}
+            <div ref={chatEndRef} />
+          </div>
+        )}
+
+        {isError && <ErrorMessage />}
+      </ScrollArea>
+
+      {showScrollButton && (
+        <Button
+          variant='outline'
+          size='icon'
+          className='absolute bottom-4 right-4 rounded-full shadow-lg'
+          onClick={scrollToBottom}
+        >
+          <ArrowDown className='h-4 w-4' />
+        </Button>
       )}
+
+      {/* Message Status Indicator */}
+      <div className='absolute bottom-0 left-0 right-0 h-1'>
+        {isLoading && (
+          <div className='h-full bg-primary/10 animate-pulse rounded-full' />
+        )}
+      </div>
     </div>
   );
 }

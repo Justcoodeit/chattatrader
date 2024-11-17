@@ -1,21 +1,28 @@
 import { format } from 'date-fns';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Card, CardContent } from '../ui/Card';
+import { Avatar, AvatarImage, AvatarFallback } from '../ui/ avatar';
+import { Badge } from '../ui/badge';
+import { cn } from '../../lib/utils';
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 import {
-  faUser,
-  faAddressCard,
-  faChartLine,
-  faCoins,
-  faLink,
-  faDollarSign,
-  faWater,
-  faChartBar,
-  faClock,
-} from '@fortawesome/free-solid-svg-icons';
-
-import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+  User,
+  Bot,
+  CreditCard,
+  TrendingUp,
+  Coins,
+  Link as LinkIcon,
+  DollarSign,
+  Droplets,
+  BarChart,
+  Clock,
+  ArrowRightLeft,
+  ExternalLink,
+  CheckCircle,
+  XCircle,
+  Loader2,
+} from 'lucide-react';
 import { useCreateBuy } from '../../libs/builder/user/mutations';
-
 import TradeConfirmation from '../TradeConfirmation';
 
 function Message({
@@ -28,6 +35,7 @@ function Message({
   chatId,
 }) {
   const isUser = message?.role === 'user';
+  console.log(message);
   const isDataUrl = (str) => str && str.startsWith('data:');
   const {
     mutate: createBuy,
@@ -37,7 +45,6 @@ function Message({
     isSuccess: isBuySuccess,
   } = useCreateBuy();
 
-  console.log(userId, createBuyData?.data.success);
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return '';
     return format(new Date(timestamp), 'MMM d, yyyy HH:mm');
@@ -47,274 +54,233 @@ function Message({
     try {
       const data = JSON.parse(content);
       return (
-        <div className='overflow-x-auto bg-transparent'>
-          <table className='min-w-full '>
-            <thead>
-              <tr className=''>
-                <th className='px-4 py-2 text-left font-semibold'>
-                  <FontAwesomeIcon icon={faUser} className='mr-2' />
-                  Name
-                </th>
-                <th className='px-4 py-2 text-left font-semibold'>
-                  <FontAwesomeIcon icon={faAddressCard} className='mr-2' />
-                  Address
-                </th>
-                <th className='px-4 py-2 text-right font-semibold'>
-                  <FontAwesomeIcon icon={faChartLine} className='mr-2' />
-                  Market Cap
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((item, index) => (
-                <tr
-                  key={index}
-                  className={index % 2 === 0 ? ' bg-black/5' : ' bg-black/10'}
-                >
-                  <td className='px-4 py-2'>{item.name}</td>
-                  <td className='px-4 py-2 font-mono text-sm'>
-                    {item.address}
-                  </td>
-                  <td className='px-4 py-2 text-right'>
-                    ${item.mcap.toLocaleString()}
-                  </td>
+        <Card className='overflow-hidden'>
+          <div className='overflow-x-auto'>
+            <table className='w-full'>
+              <thead>
+                <tr className='border-b'>
+                  <th className='px-4 py-3 text-left text-sm font-medium'>
+                    <User className='inline mr-2 h-4 w-4' />
+                    Name
+                  </th>
+                  <th className='px-4 py-3 text-left text-sm font-medium'>
+                    <CreditCard className='inline mr-2 h-4 w-4' />
+                    Address
+                  </th>
+                  <th className='px-4 py-3 text-right text-sm font-medium'>
+                    <TrendingUp className='inline mr-2 h-4 w-4' />
+                    Market Cap
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {data.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={cn(
+                      'transition-colors',
+                      index % 2 === 0 ? 'bg-muted/50' : 'bg-background'
+                    )}
+                  >
+                    <td className='px-4 py-2 text-sm'>{item.name}</td>
+                    <td className='px-4 py-2 font-mono text-xs'>
+                      {item.address}
+                    </td>
+                    <td className='px-4 py-2 text-sm text-right'>
+                      ${item.mcap.toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
       );
     } catch (error) {
-      return <p>{content}</p>;
+      return <p className='text-sm'>{content}</p>;
     }
   };
 
-  const footerMessage = (data) => {
-    return (
-      <div className='mt-2 text-sm'>
-        <p className='flex items-center'>
-          <FontAwesomeIcon icon={faCoins} className='mr-2 text-yellow-500' />
-          <span>
-            <em>Token focus for this chat has been changed to: </em>
-            <strong className='ml-1'>{data.name}</strong>
-          </span>
-        </p>
-      </div>
-    );
-  };
-
   const renderAdditionalData = (data) => {
-    return (
-      <div className='mt-2 text-sm grid grid-cols-2 gap-2'>
-        <p>
-          <FontAwesomeIcon icon={faCoins} className='mr-2' />
-          <strong>Name:</strong> {data.name}
-        </p>
-        <p>
-          <FontAwesomeIcon icon={faLink} className='mr-2' />
-          <strong>Chain:</strong> {data.chain}
-        </p>
-        <p>
-          <FontAwesomeIcon icon={faDollarSign} className='mr-2' />
-          <strong>Price:</strong> ${data.price.toFixed(6)}
-        </p>
-        <p>
-          <FontAwesomeIcon icon={faChartLine} className='mr-2' />
-          <strong>Market Cap:</strong> ${data.mc.toLocaleString()}
-        </p>
-        <p>
-          <FontAwesomeIcon icon={faWater} className='mr-2' />
-          <strong>Liquidity:</strong> ${data.liquidity.toLocaleString()}
-        </p>
-        <p>
-          <FontAwesomeIcon icon={faChartBar} className='mr-2' />
-          <strong>1h Change:</strong> {data.oneHour.toFixed(2)}%
-        </p>
-        <p>
-          <FontAwesomeIcon icon={faClock} className='mr-2' />
-          <strong>24h Change:</strong> {data.twentyFourHour.toFixed(2)}%
-        </p>
-      </div>
-    );
-  };
-  
-
-  const renderTradeData = (tradeData) => {
-    if (!tradeData) return null;
-
-    const { type, amount, name, address } = tradeData;
-    const typeSymbol = type === 'buy' ? '$' : '%';
-    const [response, setResponse] = useState(null);
-
-    const handleResponse = (answer) => {
-      sendMessage(answer);
-      setResponse(answer);
-
-      if (answer === 'Yes') {
-        createBuy({
-          amount,
-          userId,
-          address,
-          name,
-        });
-      }
-    };
+    const stats = [
+      { icon: <Coins className='h-4 w-4' />, label: 'Name', value: data.name },
+      {
+        icon: <LinkIcon className='h-4 w-4' />,
+        label: 'Chain',
+        value: data.chain,
+      },
+      {
+        icon: <DollarSign className='h-4 w-4' />,
+        label: 'Price',
+        value: `$${data.price.toFixed(6)}`,
+      },
+      {
+        icon: <TrendingUp className='h-4 w-4' />,
+        label: 'Market Cap',
+        value: `$${data.mc.toLocaleString()}`,
+      },
+      {
+        icon: <Droplets className='h-4 w-4' />,
+        label: 'Liquidity',
+        value: `$${data.liquidity.toLocaleString()}`,
+      },
+      {
+        icon: <BarChart className='h-4 w-4' />,
+        label: '1h Change',
+        value: `${data.oneHour.toFixed(2)}%`,
+      },
+      {
+        icon: <Clock className='h-4 w-4' />,
+        label: '24h Change',
+        value: `${data.twentyFourHour.toFixed(2)}%`,
+      },
+    ];
 
     return (
-      <div className='mt-4 p-4 bg-gray-100 rounded-lg shadow-md'>
-        <p className='flex items-center text-lg mb-3'>
-          <FontAwesomeIcon
-            icon={faExchangeAlt}
-            className='mr-3 text-green-500'
-          />
-          <span>
-            Are you sure you want to{' '}
-            <strong className='text-blue-600'>{type}</strong>{' '}
-            <strong className='text-green-600'>
-              {amount}
-              {typeSymbol}
-            </strong>{' '}
-            of <strong className='text-purple-600'>{name}</strong>?
-          </span>
-        </p>
-        <p className='mb-3 text-sm'>
-          Address:{' '}
-          <span className='font-mono bg-gray-200 p-1 rounded'>{address}</span>
-        </p>
-        {response === null ? (
-          <div className='flex justify-center space-x-4'>
-            <button
-              onClick={() => handleResponse('Yes')}
-              className='bg-[#0463CA] text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300'
-            >
-              Yes
-            </button>
-            <button
-              onClick={() => handleResponse('No')}
-              className='bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300'
-            >
-              No
-            </button>
-          </div>
-        ) : (
-          <div>
-            <p className='text-center font-semibold mb-2'>
-              You responded: <span className='text-blue-600'>{response}</span>
-            </p>
-            {isBuyLoading && (
-              <p className='text-center text-gray-600'>
-                Processing your buy request...
-              </p>
-            )}
-            {isBuyError && (
-              <p className='text-center text-red-600'>
-                Error processing your buy request. Please try again.
-              </p>
-            )}
-            {isBuySuccess &&
-              createBuyData &&
-              createBuyData.data &&
-              createBuyData.data.data &&
-              createBuyData.data.data.success && (
-                <div className='text-center'>
-                  <p className='text-green-600 mb-2'>
-                    {createBuyData.data.message}
-                  </p>
-                  <p className='font-semibold'>Transaction Hash URL:</p>
-                  <a
-                    href={createBuyData.data.data.hashUrl}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='text-blue-500 hover:underline break-all'
-                  >
-                    {createBuyData.data.data.hashUrl}
-                  </a>
-                </div>
+      <div className='grid grid-cols-2 gap-3 p-4 bg-muted/50 rounded-lg'>
+        {stats.map((stat, index) => (
+          <div key={index} className='flex items-center gap-2 text-sm'>
+            {stat.icon}
+            <span className='font-medium'>{stat.label}:</span>
+            <span
+              className={cn(
+                stat.label.includes('Change') && {
+                  'text-green-600': parseFloat(stat.value) > 0,
+                  'text-red-600': parseFloat(stat.value) < 0,
+                }
               )}
+            >
+              {stat.value}
+            </span>
           </div>
-        )}
+        ))}
       </div>
     );
   };
 
   return (
-    <div className={`py-2 ${isUser ? 'text-right' : 'text-left'}`}>
-      <div
-        className={`inline-block max-w-[70%] rounded-lg px-4 py-2 ${
-          isUser
-            ? 'bg-[#B0D6F566] text-black border border-[#0487E2]'
-            : 'bg-[#0463CA] text-white'
-        } ${isHistory ? 'opacity-70' : ''}`}
-      >
-        <div className='mb-2'>
-          {message.data && renderAdditionalData(message.data)}
-        </div>
-        {isDataUrl(message?.content) ? (
-          message.content.startsWith('data:image/') ? (
-            <img
-              src={message.content}
-              alt='Uploaded'
-              className='max-w-[200px] max-h-[200px] w-auto h-auto object-cover rounded'
-            />
-          ) : message.content.startsWith('data:audio/') ? (
-            <audio
-              controls
-              src={message.content}
-              className='max-w-full w-[200px]'
-            />
-          ) : (
-            <p>{message?.content}</p>
-          )
-        ) : message?.content?.startsWith('[{') ? (
-          renderAudioResponse(message.content)
+    <div
+      className={cn(
+        'flex gap-3 px-4',
+        isUser ? 'flex-row-reverse' : 'flex-row'
+      )}
+    >
+      <Avatar className='h-8 w-8'>
+        {isUser ? (
+          <>
+            <AvatarImage src='/user-avatar.png' />
+            <AvatarFallback>U</AvatarFallback>
+          </>
         ) : (
-          <p>{message?.content}</p>
+          <>
+            <AvatarImage src='/bot-avatar.png' />
+            <AvatarFallback>
+              <Bot className='h-4 w-4' />
+            </AvatarFallback>
+          </>
         )}
-        <div className='mb-2'>
-          {message.data && footerMessage(message.data)}
-        </div>
+      </Avatar>
 
-        {/* Add timestamp */}
-        <div className='text-xs mt-2 opacity-70'>
-          {formatTimestamp(message.timestamp)}
-        </div>
-      </div>
+      <div
+        className={cn(
+          'flex flex-col gap-2 max-w-[80%]',
+          isUser ? 'items-end' : 'items-start'
+        )}
+      >
+        <Card
+          className={cn(
+            'shadow-sm',
+            isUser ? 'bg-primary text-primary-foreground' : 'bg-muted'
+          )}
+        >
+          <CardContent className='p-4'>
+            {message.data && renderAdditionalData(message.data)}
 
-      {message.tradeData && (
-        <TradeConfirmation
-          tradeData={message.tradeData}
-          userId={userId}
-          sendMessage={sendMessage}
-          createBuy={createBuy}
-          isBuyLoading={isBuyLoading}
-          isBuyError={isBuyError}
-          isBuySuccess={isBuySuccess}
-          createBuyData={createBuyData}
-          chatId={chatId}
-        />
-      )}
-
-      {message.files && message.files.length > 0 && (
-        <div className='mt-2 flex flex-wrap gap-2'>
-          {message.files.map((file, fileIndex) => (
-            <div key={fileIndex} className='max-w-full'>
-              {file.type.startsWith('image/') ? (
+            {isDataUrl(message?.content) ? (
+              message.content.startsWith('data:image/') ? (
                 <img
-                  src={file.content}
-                  alt='Uploaded'
-                  className='max-w-[200px] max-h-[200px] w-auto h-auto object-cover rounded'
+                  src={message.content}
+                  alt='Uploaded content'
+                  className='max-w-[300px] rounded-lg shadow-sm'
                 />
-              ) : file.type.startsWith('audio/') ? (
-                <audio
-                  controls
-                  src={file.content}
-                  className='max-w-full w-[200px]'
-                />
-              ) : null}
-            </div>
-          ))}
-        </div>
-      )}
+              ) : message.content.startsWith('data:audio/') ? (
+                <div className='p-4 flex items-center justify-center bg-background/50 rounded-lg'>
+                  <AudioPlayer
+                    src={message.content}
+                    autoPlayAfterSrcChange={false}
+                    style={{ width: '300px', height: '53px' }}
+                    customControlsSection={[
+                      'MAIN_CONTROLS',
+                      'VOLUME_CONTROLS',
+                      // 'PROGRESS_BAR',
+                    ]}
+                    autoPlay={false}
+                    showJumpControls={false}
+                    layout='horizontal'
+                  />
+                </div>
+              ) : null
+            ) : message?.content?.startsWith('[{') ? (
+              renderAudioResponse(message.content)
+            ) : (
+              <p className='text-sm whitespace-pre-wrap'>{message?.content}</p>
+            )}
+
+            {message.data && (
+              <Badge variant='secondary' className='mt-2 gap-1'>
+                <Coins className='h-3 w-3' />
+                Token focus:{' '}
+                <span className='font-semibold'>{message.data.name}</span>
+              </Badge>
+            )}
+          </CardContent>
+        </Card>
+
+        <span className='text-xs text-muted-foreground px-2'>
+          {formatTimestamp(message.timestamp)}
+        </span>
+
+        {message.tradeData && (
+          <TradeConfirmation
+            tradeData={message.tradeData}
+            userId={userId}
+            sendMessage={sendMessage}
+            createBuy={createBuy}
+            isBuyLoading={isBuyLoading}
+            isBuyError={isBuyError}
+            isBuySuccess={isBuySuccess}
+            createBuyData={createBuyData}
+            chatId={chatId}
+          />
+        )}
+
+        {message.files && message.files.length > 0 && (
+          <div className='flex flex-wrap gap-2'>
+            {message.files.map((file, index) => (
+              <Card key={index} className='overflow-hidden'>
+                {file.type.startsWith('image/') ? (
+                  <img
+                    src={file.content}
+                    alt='Uploaded'
+                    className='max-w-[200px] h-auto object-cover'
+                  />
+                ) : file.type.startsWith('audio/') ? (
+                  <div className='p-4 flex items-center gap-3'>
+                    <audio
+                      controls
+                      src={file.content}
+                      className='w-[200px]'
+                      preload='metadata'
+                    >
+                      Your browser does not support the audio element.
+                    </audio>
+                  </div>
+                ) : null}
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

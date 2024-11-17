@@ -30,6 +30,15 @@ export const user_requests_builder = createBuilder({
     create_chat: (ChatData) => {
       return _axios.post(ENDPOINTS.user.create_chat(), ChatData);
     },
+    buyToken: (buyData) => {
+      return _axios.post(ENDPOINTS.trade.tradebuy(), buyData);
+    },
+    transactionsHistory: (userId) => {
+      return _axios.get(ENDPOINTS.transactionsHistory.get(userId));
+    },
+    get_user_balance: (userId) => {
+      return _axios.get(ENDPOINTS.user.getUserBalance(userId));
+    },
     create_buy: (ChatData) => {
       return _axios.post(ENDPOINTS.user.create_buy(), ChatData);
     },

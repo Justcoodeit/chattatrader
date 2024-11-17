@@ -1,6 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import * as LucideIcons from 'lucide-react';
-import { AiFillAudio } from 'react-icons/ai';
 
 export default function ChatInput({ sendMessage }) {
   const [message, setMessage] = useState('');

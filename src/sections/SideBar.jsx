@@ -291,7 +291,7 @@ export const Logo = () => {
       to='/'
       className='font-normal flex space-x-2 items-center text-sm text-black hover:text-yellow-100 py-1 relative z-20'
     >
-      <img src='/logo.png' alt='Chattatrader Logo' className='h-5 w-auto' />
+      <img src='/Asset6.svg' alt='Chattatrader Logo' className='h-5 w-auto' />
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -299,8 +299,8 @@ export const Logo = () => {
       >
         <div className='flex justify-center items-center leading-6'>
           <h1 className='text-3xl'>
-            <span className='text-[#008080] font-bold'>Chatter</span>
-            <span className=' text-[#E6E21A] font-bold'>Trade</span>
+            <span className='text-[#008080] font-bold'>Chatta</span>
+            <span className=' text-[#E6E21A] font-bold'>trader</span>{' '}
           </h1>
         </div>
       </motion.span>
@@ -314,7 +314,7 @@ export const LogoIcon = () => {
       to='/'
       className='font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20'
     >
-      <img src='/logo.png' alt='Chattatrader Logo' className='h-5 w-auto' />
+      <img src='/Asset6.svg' alt='Chattatrader Logo' className='h-5 w-auto' />
     </Link>
   );
 };

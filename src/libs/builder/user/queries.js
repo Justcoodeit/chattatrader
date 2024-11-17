@@ -36,6 +36,22 @@ export function useGetUserInfo() {
   });
 }
 
+export function useGetUserTransactionHistory(userId) {
+  return useQuery({
+    queryKey: ['transactions-history', userId],
+    queryFn: () => user_requests_builder.use().user.transactionsHistory(userId),
+    enabled: !!userId,
+  });
+}
+
+export function useGetUserBalance(userId) {
+  return useQuery({
+    queryKey: ['user-balance', userId], // fixed queryKey to match the data type
+    queryFn: () => user_requests_builder.use().user.get_user_balance(userId),
+    enabled: !!userId,
+  });
+}
+
 export function useGetTrendingTokens() {
   return useQuery({
     queryKey: user_requests_builder.tokens.get_trending_tokens.get(),

@@ -6,6 +6,12 @@ export const ENDPOINTS = Object.freeze({
   tokens: {
     trendingToken: () => '/tokens/trending',
   },
+  trade: {
+    tradebuy: () => '/transactions/send',
+  },
+  transactionsHistory: {
+    get: (userId) => `/transactions/history?userId=${userId}`, // renamed to get for consistency
+  },
 
   tasks: {
     base: () => '/tasks/',
@@ -25,6 +31,7 @@ export const ENDPOINTS = Object.freeze({
   },
   user: {
     create_chat: () => '/chats/createchat',
+    getUserBalance: (userId) => `/balances/getuserbalance?userId=${userId}`,
     create_buy: () => '/chats/buy',
     delete_chat: () => '/deletechat',
     get_history: (userId) => `/transactions/history/${userId}`,
@@ -44,4 +51,4 @@ export const ENDPOINTS = Object.freeze({
   },
 });
 
-export const BASE_URL = 'https://18.130.216.255/';
+export const BASE_URL = 'https://api.chattatrader.com';

@@ -42,6 +42,16 @@ export function useCreateChat() {
   });
 }
 
+export function useCreateBuyToken() {
+  return useMutation({
+    mutationFn: user_requests_builder.use().user.buyToken,
+    onSuccess: ({ data }) => {
+      // handleSuccess(data);
+    },
+    onError: handleError,
+  });
+}
+
 export function useDeleteChat() {
   return useMutation({
     mutationFn: user_requests_builder.use().user.delete_chat,

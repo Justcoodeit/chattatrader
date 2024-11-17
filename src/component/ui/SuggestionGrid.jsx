@@ -1,29 +1,29 @@
 import { useState } from 'react';
-import { Image, Search, Eye, GraduationCap } from 'lucide-react';
-import { Button } from './button';
-import { IconBooks, IconBrandAppleNews, IconWallet } from '@tabler/icons-react';
+import { Card, CardContent } from '../ui/Card';
+import { Button } from '../ui/button';
+import { IconWallet, IconBrandAppleNews, IconBooks } from '@tabler/icons-react';
 import { BsGraphUp } from 'react-icons/bs';
 
 const suggestions = [
   {
-    icon: <IconWallet className='h-6 w-6' />, // Changed to Wallet icon
+    icon: <IconWallet className='h-6 w-6' />,
     text: 'Create a crypto wallet for my assets.',
-    color: 'text-[#76D0EB]',
+    color: 'text-blue-500',
   },
   {
-    icon: <IconBrandAppleNews className='h-6 w-6' />, // Changed to News icon
+    icon: <IconBrandAppleNews className='h-6 w-6' />,
     text: "What's the latest news in the crypto market?",
-    color: 'text-[#76D0EB]',
+    color: 'text-blue-500',
   },
   {
-    icon: <BsGraphUp className='h-6 w-6' />, // Changed to GraphUp icon
+    icon: <BsGraphUp className='h-6 w-6' />,
     text: 'Suggest a crypto investment strategy.',
-    color: 'text-[#ED6262]',
+    color: 'text-red-500',
   },
   {
-    icon: <IconBooks className='h-6 w-6' />, // Changed to Book icon
+    icon: <IconBooks className='h-6 w-6' />,
     text: 'Learn about blockchain technology.',
-    color: 'text-[#76D0EB]',
+    color: 'text-blue-500',
   },
 ];
 
@@ -37,28 +37,31 @@ export default function SuggestionGrid({ sendMessage, selectedSuggestionSet }) {
 
   return (
     <div className='mx-auto mt-12 max-w-3xl'>
-      <div className=' flex justify-center items-center pb-7'>
-        <h1>
-          Welcome to <span className='text-[#008080] font-bold'>Chatter</span>
-          <span className=' text-[#E6E21A] font-bold'>Trade</span>
-        </h1>
-      </div>
-      <div className='flex flex-wrap items-stretch justify-center gap-4'>
+      <Card className='mb-8 bg-gradient-to-r from-[#008080] to-[#0b9898]'>
+        <CardContent className='flex justify-center items-center p-6'>
+          <h1 className='text-2xl font-bold text-white'>
+            Welcome to <span className='text-teal-300'>Chatta</span>
+            <span className='text-yellow-300'>trader</span>
+          </h1>
+        </CardContent>
+      </Card>
+
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         {suggestions.map((suggestion, index) => (
           <Button
             key={index}
             variant='outline'
-            className={`relative flex bg-[#D5FFFF] h-[57px] flex-row w-[321.82px]  items-center gap-2 rounded-sm px-3 pb-4 pt-3 text-start shadow-sm transition ${
+            className={`h-auto p-4 justify-start space-x-4 bg-white hover:bg-gray-50 ${
               selectedSuggestion === suggestion.text
-                ? 'bg-gray-100 dark:bg-gray-100  border-gray-200'
-                : 'hover:bg-gray-50 dark:hover:bg-[#d0f6f6] border-gray-200'
+                ? 'ring-2 ring-blue-500'
+                : ''
             }`}
             onClick={() => handleSuggestionClick(suggestion)}
           >
-            <div className={suggestion.color}>{suggestion.icon}</div>
-            <div className=' text-sm w-full text-gray-600 dark:text-[#393939]'>
+            <span className={suggestion.color}>{suggestion.icon}</span>
+            <span className='text-sm text-gray-600 text-left'>
               {suggestion.text}
-            </div>
+            </span>
           </Button>
         ))}
       </div>

@@ -1,275 +1,351 @@
 import {
-  FaApple,
-  FaDiscord,
-  FaLinode,
-  FaPlus,
-  FaTwitter,
-} from 'react-icons/fa';
-import CandleStick from '../component/CandleStick';
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '../component/ui/Card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../component/ui/tabs';
+import { Skeleton } from '../component/ui/Skeleton';
+import { FaPlus, FaArrowUp, FaArrowDown, FaArrowRight } from 'react-icons/fa';
 import { BiTransfer } from 'react-icons/bi';
-import { user } from '../assets';
-
-import Navbar from '../component/Navbar';
-import GreetUser from '../component/GreetUser';
-import PriceNav from '../component/PriceNav';
-import AssetNetWorth from '../component/AssetNetWorth';
-import Wallets from '../component/Wallets';
-import RegisteredUsers from '../component/RegisteredUsers';
-import PNLAnalysis from '../component/PNLAnalysis';
-import WalletDetails from '../component/WalletDetails';
+import { FaLinode } from 'react-icons/fa';
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
+import { useGetUserBalance } from '../libs/builder/user/queries';
 
 const Wallet = ({ userInfo }) => {
   const userEmail = userInfo?.data?.userInfo?.email;
-  const ethMnemonic = userInfo?.data?.userInfo?.ethMnemonic;
-  const ethPrivateKey = userInfo?.data?.userInfo?.ethPrivateKey;
-  const ethHolding = userInfo?.data?.userInfo?.ethholding;
-  const solMnemonic = userInfo?.data?.userInfo?.solMnemonic;
-  const solPrivateKey = userInfo?.data?.userInfo?.solPrivateKey;
-  const solWalletAddress = userInfo?.data?.userInfo?.solWalletAddress;
-  const username = userInfo?.data?.userInfo?.username;
-  const walletAddress = userInfo?.data?.userInfo?.walletAddress;
+  const userID = userInfo?.data?.userInfo?.id;
+  const { data: balanceResponse, isLoading } = useGetUserBalance(userID);
 
-  console.log({ userEmail, username, walletAddress });
+  // Access the correct data path
+  const balances = balanceResponse?.data?.data;
 
-  const stats = [
-    { label: 'Total Block', value: '114,568,657' },
-    { label: 'Total Transaction', value: '$14,568M' },
-    { label: 'Market Cap', value: '$15,680B' },
-    { label: 'Total Account', value: '15,680,678' },
-  ];
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  };
 
-  const assets = [
-    { name: 'BTC', price: '$34.56', change: '+2.5%', icon: FaTwitter },
-    { name: 'ETH', price: '$145.67', change: '-1.2%', icon: FaApple },
-    { name: 'SOL', price: '$78.90', change: '+5.7%', icon: FaDiscord },
-  ];
+  const formatCrypto = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 8,
+    }).format(amount);
+  };
 
-  const portfolioData = [
-    {
-      asset: 'Solana',
-      symbol: 'SOL',
-      balance: '$45,780',
-      buyPrice: '$1,237.00',
-      profit: '28%',
-      value: '$45,780',
-    },
-    {
-      asset: 'Bitcoin',
-      symbol: 'BTC',
-      balance: '£41,56',
-      buyPrice: '$45.00',
-      profit: '43%',
-      value: '$1,237.00',
-    },
-    {
-      asset: 'Bitcoin',
-      symbol: 'BTC',
-      balance: '£98,55',
-      buyPrice: '$23.00',
-      profit: '54%',
-      value: '$45,780',
-    },
-    {
-      asset: 'Bitcoin',
-      symbol: 'BTC',
-      balance: '$652,00',
-      buyPrice: '$21,990',
-      profit: '21%',
-      value: '$1,237.00',
-    },
-    {
-      asset: 'Bitcoin',
-      symbol: 'BTC',
-      balance: '$19,000',
-      buyPrice: '$37.00',
-      profit: '32%',
-      value: '$652,00',
-    },
-    {
-      asset: 'Bitcoin',
-      symbol: 'BTC',
-      balance: '$32,00',
-      buyPrice: '$67.000',
-      profit: '12%',
-      value: '$45,780',
-    },
-  ];
-
-  const latestBlocks = [
-    {
-      block: '1896790',
-      time: '5min ago',
-      transactions: 12,
-      hash: '0xdhf21357gdfhkdm,dsgb56790....',
-    },
-    {
-      block: '1896790',
-      time: '5min ago',
-      transactions: 34,
-      hash: '0xdhf21357gdfhkdm,dsgb56790....',
-    },
-    {
-      block: '1896790',
-      time: '5min ago',
-      transactions: 34,
-      hash: '0xdhf21357gdfhkdm,dsgb56790....',
-    },
-    {
-      block: '1896790',
-      time: '5min ago',
-      transactions: 34,
-      hash: '0xdhf21357gdfhkdm,dsgb56790....',
-    },
-    {
-      block: '1896790',
-      time: '5min ago',
-      transactions: 34,
-      hash: '0xdhf21357gdfhkdm,dsgb56790....',
-    },
-  ];
+  const getTotalBalance = () => {
+    return (
+      (balances?.eth?.totalUsd || 0) +
+      (balances?.sol?.totalUsd || 0) +
+      (balances?.base?.totalUsd || 0)
+    );
+  };
 
   return (
-    <div className='h-full flex flex-col p-2 sm:p-6 space-y-4 sm:space-y-6 bg'>
-      <div className='flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4 bg-[#008080] rounded-xl p-4 sm:p-8'>
-        <div className='flex flex-col w-full sm:w-auto'>
-          <div className='flex items-center gap-4 mb-4'>
-            {/* <div className='w-[60px] h-[60px] bg-[#B0D6F5] rounded-full flex items-center justify-center'>
-              <img src={user} className='w-[36px] h-[28.22px]' alt='Solana' />
-            </div> */}
-            <div className='flex flex-col items-start text-white'>
-              <p className='text-[#FFFFFF] font-medium'>ChatterTrade Balance</p>
-              <div className='text-[#fff] rounded-sm p-1'>
-                <p className='text-3xl flex  '>
-                  $12,455.00
-                  <span className='text-sm font-medium '>{'Sol'}</span>
-                </p>
-                {/* {solWalletAddress} */}
-              </div>
-            </div>
-          </div>
-          <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
-            {stats.map((stat) => (
-              <div key={stat.label} className='p-4 rounded-lg'>
-                <h3 className='text-base font-semibold text-white'>
-                  {stat.label}
-                </h3>
-                <p className='text-lg font-bold text-white'>{stat.value}</p>
-              </div>
+    <div className='p-6 space-y-6'>
+      <Tabs defaultValue='overview' className='space-y-6'>
+        <TabsList>
+          <TabsTrigger value='overview'>Overview</TabsTrigger>
+          <TabsTrigger value='eth'>Ethereum</TabsTrigger>
+          <TabsTrigger value='sol'>Solana</TabsTrigger>
+          <TabsTrigger value='base'>Base</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value='overview'>
+          <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
+            {/* Total Balance Card */}
+            <Card className='col-span-2'>
+              <CardHeader>
+                <CardTitle>Total Balance</CardTitle>
+                <CardDescription>Your total portfolio value</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <Skeleton className='h-[200px]' />
+                ) : (
+                  <div className='space-y-8'>
+                    <div className='flex items-center justify-between'>
+                      <div>
+                        <p className='text-4xl font-bold'>
+                          {formatCurrency(getTotalBalance())}
+                        </p>
+                        <p className='text-sm text-muted-foreground'>
+                          Total Value in USD
+                        </p>
+                      </div>
+                      <div className='flex items-center space-x-2 text-green-500'>
+                        <FaArrowUp />
+                        <span>+12.5%</span>
+                      </div>
+                    </div>
+
+                    <ResponsiveContainer width='100%' height={200}>
+                      <AreaChart
+                        data={[
+                          { name: 'ETH', value: balances?.eth?.totalUsd || 0 },
+                          { name: 'SOL', value: balances?.sol?.totalUsd || 0 },
+                          {
+                            name: 'BASE',
+                            value: balances?.base?.totalUsd || 0,
+                          },
+                        ]}
+                        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                      >
+                        <defs>
+                          <linearGradient
+                            id='total'
+                            x1='0'
+                            y1='0'
+                            x2='0'
+                            y2='1'
+                          >
+                            <stop
+                              offset='5%'
+                              stopColor='#0463CA'
+                              stopOpacity={0.8}
+                            />
+                            <stop
+                              offset='95%'
+                              stopColor='#0463CA'
+                              stopOpacity={0}
+                            />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray='3 3' />
+                        <XAxis dataKey='name' />
+                        <YAxis />
+                        <Tooltip
+                          formatter={(value) => formatCurrency(value)}
+                          labelStyle={{ color: '#666' }}
+                        />
+                        <Area
+                          type='monotone'
+                          dataKey='value'
+                          stroke='#0463CA'
+                          fillOpacity={1}
+                          fill='url(#total)'
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Quick Actions Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+                <CardDescription>Frequently used operations</CardDescription>
+              </CardHeader>
+              <CardContent className='grid gap-4'>
+                <button className='flex items-center justify-between p-2 text-sm bg-primary/5 rounded-md hover:bg-primary/10'>
+                  <span className='flex items-center gap-2'>
+                    <FaPlus className='text-primary' />
+                    Buy Crypto
+                  </span>
+                  <FaArrowRight className='text-primary' />
+                </button>
+                <button className='flex items-center justify-between p-2 text-sm bg-primary/5 rounded-md hover:bg-primary/10'>
+                  <span className='flex items-center gap-2'>
+                    <BiTransfer className='text-primary' />
+                    Transfer
+                  </span>
+                  <FaArrowRight className='text-primary' />
+                </button>
+                <button className='flex items-center justify-between p-2 text-sm bg-primary/5 rounded-md hover:bg-primary/10'>
+                  <span className='flex items-center gap-2'>
+                    <FaLinode className='text-primary' />
+                    Withdraw
+                  </span>
+                  <FaArrowRight className='text-primary' />
+                </button>
+              </CardContent>
+            </Card>
+
+            {/* Asset Distribution */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Asset Distribution</CardTitle>
+                <CardDescription>Portfolio breakdown</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <Skeleton className='h-[200px]' />
+                ) : (
+                  <div className='space-y-4'>
+                    {['eth', 'sol', 'base'].map((chain) => {
+                      const total = getTotalBalance();
+                      const percentage =
+                        total > 0
+                          ? (
+                              ((balances?.[chain]?.totalUsd || 0) / total) *
+                              100
+                            ).toFixed(1)
+                          : '0';
+
+                      return (
+                        <div key={chain} className='space-y-2'>
+                          <div className='flex justify-between text-sm'>
+                            <span className='capitalize'>{chain}</span>
+                            <span>{percentage}%</span>
+                          </div>
+                          <div className='h-2 bg-primary/10 rounded-full overflow-hidden'>
+                            <div
+                              className='h-full bg-primary transition-all duration-500'
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Individual Chain Cards */}
+            {['eth', 'sol', 'base'].map((chain) => (
+              <Card key={chain}>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium capitalize'>
+                    {chain === 'eth'
+                      ? 'Ethereum'
+                      : chain === 'sol'
+                      ? 'Solana'
+                      : 'Base'}
+                  </CardTitle>
+                  <div
+                    className={`rounded-full p-2 ${
+                      balances?.[chain]?.totalUsd > 0
+                        ? 'bg-green-100'
+                        : 'bg-red-100'
+                    }`}
+                  >
+                    {balances?.[chain]?.totalUsd > 0 ? (
+                      <FaArrowUp className='text-green-600' />
+                    ) : (
+                      <FaArrowDown className='text-red-600' />
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {isLoading ? (
+                    <Skeleton className='h-12 w-[200px]' />
+                  ) : (
+                    <div className='space-y-2'>
+                      <div className='text-2xl font-bold'>
+                        {formatCurrency(balances?.[chain]?.totalUsd || 0)}
+                      </div>
+                      <p className='text-xs text-muted-foreground'>
+                        {formatCrypto(
+                          balances?.[chain]?.nativeTokenAmount || 0
+                        )}{' '}
+                        {chain.toUpperCase()}
+                      </p>
+                      <div className='h-1 bg-primary/10 rounded-full'>
+                        <div
+                          className='h-full bg-primary rounded-full transition-all duration-500'
+                          style={{
+                            width: `${
+                              balances?.[chain]?.nativeTokenBalanceUsd > 0
+                                ? 100
+                                : 0
+                            }%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             ))}
           </div>
-        </div>
-        <div className='flex flex-col gap-4 text-white w-full sm:w-auto'>
-          <div className='flex justify-between gap-10'>
-            <div className='flex flex-col'>
-              <p>Value Risk</p>
-              <p>*******</p>
-            </div>
-            <div>
-              <p>Value Risk</p>
-              <p>*******</p>
-            </div>
-          </div>
-          <div className='flex justify-between gap-10'>
-            <div className='flex flex-col items-center'>
-              <FaPlus />
-              <p className='text-sm'>Buy</p>
-            </div>
-            <div className='flex flex-col items-center'>
-              <BiTransfer />
-              <p className='text-sm'>Transfer</p>
-            </div>
-            <div className='flex flex-col items-center'>
-              <FaLinode />
-              <p className='text-sm'>Withdraw</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <PriceNav />
-      <div className='lg:flex-row  flex flex-col  '>
-        <div className='basis-[40%]'>
-          <AssetNetWorth />
-        </div>
-        <div className='basis-[30%]'>
-          <Wallets />
-        </div>
-        <div className='basis-[30%]'>
-          <PNLAnalysis />
-        </div>
-      </div>
+        </TabsContent>
 
-      <div className='flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6'>
-        <div className='w-full  bg-white rounded-lg shadow p-4 sm:p-6'>
-          <div className='flex justify-between items-center mb-4'>
-            <h2 className='text-xl font-bold text-black'>Latest Blocks</h2>
-            <button className='border border-[#B0D6F599] bg-transparent text-[#32405499] text-sm px-2 py-1 rounded'>
-              View All
-            </button>
-          </div>
-          {latestBlocks.map((block, index) => (
-            <div key={index} className='border-b py-2'>
-              <div className='flex gap-6'>
-                <div>
-                  <img src='/images/frame.png' alt='Frame' />
-                </div>
-                <div className='flex flex-col w-full gap-3'>
-                  <div className='flex justify-between w-full items-center'>
-                    <span className='font-bold text-gray-500'>
-                      {block.block}
-                    </span>
-                    <span className='text-gray-500 text-[11px]'>
-                      {block.time}
-                    </span>
-                  </div>
-                  <div className='text-sm text-gray-600'>
-                    Transactions: {block.transactions}
-                  </div>
-                  <div className='text-sm text-gray-500 truncate'>
-                    {block.hash}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className='w-full sm:w-1/3 border-[#32405433] border-2 rounded-[12px] p-4 '>
-          <h2 className='text-xl font-bold mb-4 text-black'>Watchlist</h2>
-          <div className='flex flex-col justify-between h-[90%]'>
-            <div>
-              {assets.map((asset) => (
-                <div
-                  key={asset.name}
-                  className='flex items-center justify-between mb-3'
-                >
-                  <div className='flex items-center'>
-                    {/* <asset.icon className='w-6 h-6 mr-2 text-black' /> */}
-                    <span className='font-medium text-black'>{asset.name}</span>
-                  </div>
-                  <div className='text-right'>
-                    <div className='font-bold'>{asset.price}</div>
-                    <div
-                      className={
-                        asset.change.startsWith('+')
-                          ? 'text-green-500'
-                          : 'text-red-500'
-                      }
-                    >
-                      {asset.change}
+        {/* Individual Chain Tabs */}
+        {['eth', 'sol', 'base'].map((chain) => (
+          <TabsContent key={chain} value={chain}>
+            <Card>
+              <CardHeader>
+                <CardTitle className='capitalize'>
+                  {chain === 'eth'
+                    ? 'Ethereum'
+                    : chain === 'sol'
+                    ? 'Solana'
+                    : 'Base'}{' '}
+                  Wallet
+                </CardTitle>
+              </CardHeader>
+              <CardContent className='space-y-4'>
+                {isLoading ? (
+                  <Skeleton className='h-[200px]' />
+                ) : (
+                  <>
+                    <div className='space-y-2'>
+                      <h3 className='text-sm font-medium'>Balance</h3>
+                      <div className='text-3xl font-bold'>
+                        {formatCurrency(balances?.[chain]?.totalUsd || 0)}
+                      </div>
+                      <p className='text-sm text-muted-foreground'>
+                        {formatCrypto(
+                          balances?.[chain]?.nativeTokenAmount || 0
+                        )}{' '}
+                        {chain.toUpperCase()}
+                      </p>
                     </div>
-                  </div>
-                </div>
-              ))}
-            </div>
 
-            <div className='mt-4'>
-              <p className='text-sm text-[#32405499]'>
-                Top Picks for Your Crypto Watchlist: Web3 & Solana Projects to
-                Follow
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+                    <div className='grid grid-cols-3 gap-4'>
+                      <Card className='p-4 text-center cursor-pointer hover:bg-accent transition-colors'>
+                        <FaPlus className='mx-auto mb-2' />
+                        <p className='text-sm'>Buy</p>
+                      </Card>
+                      <Card className='p-4 text-center cursor-pointer hover:bg-accent transition-colors'>
+                        <BiTransfer className='mx-auto mb-2' />
+                        <p className='text-sm'>Transfer</p>
+                      </Card>
+                      <Card className='p-4 text-center cursor-pointer hover:bg-accent transition-colors'>
+                        <FaLinode className='mx-auto mb-2' />
+                        <p className='text-sm'>Withdraw</p>
+                      </Card>
+                    </div>
+
+                    {balances?.[chain]?.tokens?.length > 0 ? (
+                      <div className='space-y-2'>
+                        <h3 className='text-sm font-medium'>Tokens</h3>
+                        {balances[chain].tokens.map((token, index) => (
+                          <Card key={index} className='p-4'>
+                            <div className='flex justify-between'>
+                              <span>{token.symbol}</span>
+                              <span>{formatCrypto(token.amount)}</span>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    ) : (
+                      <Card className='p-4 text-center text-muted-foreground'>
+                        No tokens found
+                      </Card>
+                    )}
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        ))}
+      </Tabs>
     </div>
   );
 };
