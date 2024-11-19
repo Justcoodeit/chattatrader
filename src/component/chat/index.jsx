@@ -14,6 +14,7 @@ function ChatMessage({
   sendMessage,
   userId,
   chatId,
+  socket,
 }) {
   const ongoingMessages = chatData || [];
   const chatEndRef = useRef(null);
@@ -100,6 +101,7 @@ function ChatMessage({
                 sendMessage={sendMessage}
                 userId={userId}
                 chatId={chatId}
+                socket={socket}
               />
             ))}
             <div ref={chatEndRef} />

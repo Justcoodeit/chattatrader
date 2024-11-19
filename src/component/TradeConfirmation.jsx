@@ -65,6 +65,7 @@ export default function TradeConfirmation({
           address,
           name,
           chatId,
+          cancelled: false,
         });
       } catch (error) {
         console.error('Buy error:', error);
@@ -72,6 +73,13 @@ export default function TradeConfirmation({
         setStatus('error');
       }
     } else {
+      try {
+        await createBuy({
+          cancel: true,
+        });
+      } catch (error) {
+        console.error('Cancel error:', error);
+      }
       setStatus('idle');
     }
   };

@@ -5,7 +5,7 @@ const CryptoItem = ({ name, address, mcap, count }) => {
   return (
     <li className='relative' data-testid='crypto-item'>
       <div className='group relative flex items-center justify-between rounded-lg hover:bg-yellow-50'>
-        <div className='flex-grow flex flex-col p-2 overflow-hidden'>
+        <div className='flex-grow flex flex-col p-2 overflow-hidden '>
           <div className='flex justify-between items-center'>
             <span className='text-black text-sm font-semibold'>
               {name || 'Unknown'}
@@ -100,8 +100,8 @@ export default function ChatHistorySection({ chatHistory }) {
   }, [chatHistory]);
 
   return (
-    <div className='flex h-full w-full max-w-xs flex-col rounded-md overflow-y-auto bg-[#FFFDD2] shadow-lg p-2 custom-scrollbar'>
-      <div className='flex-grow overflow-y-auto p-2'>
+    <div className='flex h-full w-full max-w-xs flex-col rounded-md overflow-y-auto bg-[#FFFDD2] shadow-lg p-2 custom-scrollbar scrollbar-hide'>
+      <div className='flex-grow overflow-y-auto p-2 scrollbar-hide'>
         <CryptoSection
           title='History List'
           cryptos={groupedCryptoData}

@@ -3,37 +3,38 @@ import { Card, CardContent } from '../ui/Card';
 import { Button } from '../ui/button';
 import { IconWallet, IconBrandAppleNews, IconBooks } from '@tabler/icons-react';
 import { BsGraphUp } from 'react-icons/bs';
-
-const suggestions = [
-  {
-    icon: <IconWallet className='h-6 w-6' />,
-    text: 'Create a crypto wallet for my assets.',
-    color: 'text-blue-500',
-  },
-  {
-    icon: <IconBrandAppleNews className='h-6 w-6' />,
-    text: "What's the latest news in the crypto market?",
-    color: 'text-blue-500',
-  },
-  {
-    icon: <BsGraphUp className='h-6 w-6' />,
-    text: 'Suggest a crypto investment strategy.',
-    color: 'text-red-500',
-  },
-  {
-    icon: <IconBooks className='h-6 w-6' />,
-    text: 'Learn about blockchain technology.',
-    color: 'text-blue-500',
-  },
-];
+import { useGetTrendingTokens } from '../../libs/builder/user/queries';
 
 export default function SuggestionGrid({ sendMessage, selectedSuggestionSet }) {
   const [selectedSuggestion, setSelectedSuggestion] = useState(null);
+  const { data: trendingTokens, isLoading } = useGetTrendingTokens();
+
+  const getTrendingTokensSuggestions = () => {
+    if (!trendingTokens?.data?.data) return [];
+
+    const { solana, ethereum } = trendingTokens.data.data;
+    return [
+      {
+        icon: <IconWallet className='h-6 w-6' />,
+        text: `Tell me about $${solana.tokens[0].name} (${solana.tokens[0].symbol}) `,
+        color: 'text-purple-500',
+        Address: `${solana.tokens[0].address}`,
+      },
+      {
+        icon: <IconWallet className='h-6 w-6' />,
+        text: `Tell me about $${ethereum.tokens[0].name} (${ethereum.tokens[0].symbol})  `,
+        color: 'text-blue-500',
+        Address: `${ethereum.tokens[0].address}`,
+      },
+    ];
+  };
 
   const handleSuggestionClick = (suggestion) => {
-    sendMessage(suggestion.text);
+    sendMessage(`tell me about ${suggestion.Address}`);
     selectedSuggestionSet(false);
   };
+
+  const allSuggestions = [...getTrendingTokensSuggestions()];
 
   return (
     <div className='mx-auto mt-12 max-w-3xl'>
@@ -47,7 +48,7 @@ export default function SuggestionGrid({ sendMessage, selectedSuggestionSet }) {
       </Card>
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-        {suggestions.map((suggestion, index) => (
+        {allSuggestions.map((suggestion, index) => (
           <Button
             key={index}
             variant='outline'
@@ -64,6 +65,14 @@ export default function SuggestionGrid({ sendMessage, selectedSuggestionSet }) {
             </span>
           </Button>
         ))}
+      </div>
+      <div className=' flex justify-center mt-6 w-full'>
+        <Button
+          className='flex justify-center w-full'
+          onClick={() => selectedSuggestionSet(false)}
+        >
+          Start
+        </Button>
       </div>
     </div>
   );

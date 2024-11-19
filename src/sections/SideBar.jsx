@@ -1,15 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Sidebar, SidebarBody, SidebarLink } from '../component/ui/sidebar';
-import {
-  IconArrowLeft,
-  IconBrandTabler,
-  IconMessagePlus,
-  IconSettings,
-  IconUserBolt,
-  IconHistory,
-  IconWallet,
-  IconBellRinging,
-} from '@tabler/icons-react';
+import { IconArrowLeft, IconBellRinging } from '@tabler/icons-react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '../libs/utils';
@@ -20,23 +11,13 @@ import Wallet from './Wallet';
 import History from './History';
 import { user } from '../assets';
 import {
-  useGetProfileInformation,
   useGetUserInfo,
   useGetUserSingleChatWithID,
 } from '../libs/builder/user/queries';
-import Navbar from '../component/Navbar';
 import GreetUser from '../component/GreetUser';
-import {
-  CryptoChart,
-  PocketWallet,
-  ProfitAnalysis,
-  SelectedWallet,
-} from '../data/Icons';
+import { CryptoChart, PocketWallet, ProfitAnalysis } from '../data/Icons';
 import ChatHistorySection from '../component/ui/ChatHistorySection';
 import Discovery from './Discovery/Discovery';
-
-const Notification = () => <div>Notification Component</div>;
-const Settings = () => <div>Settings Component</div>;
 
 export function SidebarDemo() {
   const [activeTab, setActiveTab] = useState('chat');
@@ -222,7 +203,7 @@ export function SidebarDemo() {
     >
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className='justify-between gap-10'>
-          <div className='flex flex-col flex-1 overflow-y-auto overflow-x-hidden'>
+          <div className='flex flex-col flex-1 overflow-y-auto overflow-x-hidden  scrollbar-hide'>
             {open ? <Logo /> : <LogoIcon />}
             <div className='mt-8 flex flex-col gap-2'>
               {links.map((link, idx) => (
@@ -238,7 +219,7 @@ export function SidebarDemo() {
           <AnimatePresence>
             {chatHistory && (
               <motion.div
-                className='flex-1 overflow-y-auto mt-4'
+                className='flex-1 overflow-y-auto mt-4 scrollbar-hide'
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
@@ -325,24 +306,7 @@ const Dashboard = ({ activeTab, links, searchQuery, setSearchQuery }) => {
   return (
     <div className='flex flex-1 flex-col overflow-hidden'>
       {/* activeTab !== 'history' && */}
-      {activeTab !== 'chat' && (
-        <GreetUser userInfo={userInfo} />
-
-        // <div className='p-4 bg-white shadow-sm flex items-center justify-between overflow-y-auto '>
-        //   <div className='flex-1 mr-4'>
-        //     <input
-        //       type='text'
-        //       placeholder='Search by Address / txn hash / block / token'
-        //       value={searchQuery}
-        //       onChange={(e) => setSearchQuery(e.target.value)}
-        //       className='w-full px-4 py-2 border bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
-        //     />
-        //   </div>
-        //   <button className='bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500'>
-        //     Connect
-        //   </button>
-        // </div>
-      )}
+      {activeTab !== 'chat' && <GreetUser userInfo={userInfo} />}
       <div className='flex-1 p-2 md:p-10 border border-neutral-200 dark:border-neutral-700 bg-white/5 flex flex-col gap-2 overflow-y-auto'>
         {links.map(
           (link) =>

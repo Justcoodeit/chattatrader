@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useCreateBuy } from '../../libs/builder/user/mutations';
 import TradeConfirmation from '../TradeConfirmation';
+import { useState } from 'react';
 
 function Message({
   message,
@@ -33,9 +34,11 @@ function Message({
   sendMessage,
   userId,
   chatId,
+  socket,
 }) {
   const isUser = message?.role === 'user';
-  console.log(message);
+  const [selectedRow, setSelectedRow] = useState(null);
+
   const isDataUrl = (str) => str && str.startsWith('data:');
   const {
     mutate: createBuy,
@@ -48,6 +51,16 @@ function Message({
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return '';
     return format(new Date(timestamp), 'MMM d, yyyy HH:mm');
+  };
+  const sendContractAddress = (address) => {
+    const messageData = {
+      chatId: chatId,
+      content: address,
+      timestamp: new Date().toISOString(),
+      role: 'user',
+    };
+
+    socket.emit('message', JSON.stringify(messageData));
   };
 
   const renderAudioResponse = (content) => {
@@ -71,6 +84,9 @@ function Message({
                     <TrendingUp className='inline mr-2 h-4 w-4' />
                     Market Cap
                   </th>
+                  <th className='px-4 py-3 text-right text-sm font-medium'>
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -79,7 +95,8 @@ function Message({
                     key={index}
                     className={cn(
                       'transition-colors',
-                      index % 2 === 0 ? 'bg-muted/50' : 'bg-background'
+                      index % 2 === 0 ? 'bg-muted/50' : 'bg-background',
+                      selectedRow === index && 'bg-primary/10'
                     )}
                   >
                     <td className='px-4 py-2 text-sm'>{item.name}</td>
@@ -88,6 +105,29 @@ function Message({
                     </td>
                     <td className='px-4 py-2 text-sm text-right'>
                       ${item.mcap.toLocaleString()}
+                    </td>
+                    <td className='px-4 py-2 text-right'>
+                      <button
+                        onClick={() => {
+                          setSelectedRow(index);
+                          sendContractAddress(`${item.address}`);
+                        }}
+                        className={cn(
+                          'px-3 py-1 rounded-md text-sm font-medium transition-colors',
+                          selectedRow === index
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-secondary hover:bg-secondary/80'
+                        )}
+                      >
+                        {selectedRow === index ? (
+                          <span className='flex items-center gap-1'>
+                            <CheckCircle className='h-4 w-4' />
+                            Selected
+                          </span>
+                        ) : (
+                          'Select'
+                        )}
+                      </button>
                     </td>
                   </tr>
                 ))}
