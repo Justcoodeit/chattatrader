@@ -374,7 +374,7 @@ function Discovery({ userInfo }) {
                     defaultValue={selectedChain}
                     onValueChange={setSelectedChain}
                   >
-                    <TabsList className='bg-[#FFFFFF1A]'>
+                    <TabsList className='bg-[#ec57571a] '>
                       <TabsTrigger
                         value='sol'
                         className='text-white data-[state=active]:bg-[#FFFFFF33]'
