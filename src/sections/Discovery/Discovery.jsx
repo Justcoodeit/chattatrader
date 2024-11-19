@@ -374,22 +374,22 @@ function Discovery({ userInfo }) {
                     defaultValue={selectedChain}
                     onValueChange={setSelectedChain}
                   >
-                    <TabsList className='bg-white/10'>
+                    <TabsList className='bg-[#FFFFFF1A]'>
                       <TabsTrigger
                         value='sol'
-                        className='text-white data-[state=active]:bg-white/20'
+                        className='text-white data-[state=active]:bg-[#FFFFFF33]'
                       >
                         Solana
                       </TabsTrigger>
                       <TabsTrigger
                         value='eth'
-                        className='text-white data-[state=active]:bg-white/20'
+                        className='text-white data-[state=active]:bg-[#FFFFFF33]'
                       >
                         Ethereum
                       </TabsTrigger>
                       <TabsTrigger
                         value='base'
-                        className='text-white data-[state=active]:bg-white/20'
+                        className='text-white data-[state=active]:bg-[#FFFFFF33]'
                       >
                         Base
                       </TabsTrigger>
