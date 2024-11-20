@@ -1,6 +1,6 @@
 const LeftOverlayContent = ({ isAnimated, setIsAnimated }) => {
   return (
-    <div className=' text-center flex justify-center flex-col'>
+    <div className='text-center flex justify-center flex-col'>
       <h1 className='text-6xl font-bold text-white mb-4'>
         Already have an account ?
       </h1>
