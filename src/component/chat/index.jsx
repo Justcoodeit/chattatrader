@@ -74,7 +74,7 @@ function ChatMessage({
         <Bot className='h-8 w-8 text-primary' />
       </div>
       <div className='space-y-2'>
-        <h3 className='font-semibold text-xl'>Welcome to ChatTrader</h3>
+        <h3 className='font-semibold text-xl'>Welcome to ChattaTrader</h3>
         <p className='text-muted-foreground text-sm max-w-sm'>
           Start your conversation by sending a message. Ask about market
           analysis, trading strategies, or get real-time token information.

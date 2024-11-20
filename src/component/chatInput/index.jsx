@@ -143,7 +143,7 @@ export default function ChatInput({ sendMessage }) {
             <div className='max-h-52 overflow-auto'>
               <textarea
                 className='block h-10 w-full resize-none border-0 bg-transparent px-0 py-2 text-gray-900 placeholder:text-gray-500 focus:ring-0 focus:outline-none'
-                placeholder='Message Chattatrader'
+                placeholder='Message ChattaTrader'
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows={1}
