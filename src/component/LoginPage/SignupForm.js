@@ -27,7 +27,7 @@ const SignupForm = () => {
         <div className='p-8 flex-1'>
           <div className='mx-auto overflow-hidden'>
             <div className='p-8'>
-              <h1 className='text-5xl font-bold text-indigo-600'>
+              <h1 className='text-5xl font-bold text-[#008080]'>
                 Create account
               </h1>
 
@@ -37,7 +37,7 @@ const SignupForm = () => {
                     id='name'
                     name='name'
                     type='text'
-                    className='peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-indigo-600'
+                    className='peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-[#008080]'
                     placeholder='Name'
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -55,7 +55,7 @@ const SignupForm = () => {
                     id='email'
                     name='email'
                     type='text'
-                    className='peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-indigo-600'
+                    className='peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-[#008080]'
                     placeholder='john@doe.com'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -73,7 +73,7 @@ const SignupForm = () => {
                     id='password'
                     type='password'
                     name='password'
-                    className='peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-indigo-600'
+                    className='peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-[#008080]'
                     placeholder='Password'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -91,7 +91,7 @@ const SignupForm = () => {
                   onClick={handleSubmit}
                   type='submit'
                   value='Sign up'
-                  className='mt-20 px-8 py-4 uppercase rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-center block w-full focus:outline-none focus:ring focus:ring-offset-2 focus:ring-indigo-500 focus:ring-opacity-80 cursor-pointer'
+                  className='mt-20 px-8 py-4 uppercase rounded-full bg-[#008080] hover:bg-[#008080] text-white font-semibold text-center block w-full focus:outline-none focus:ring focus:ring-offset-2 focus:ring-[#008080] focus:ring-opacity-80 cursor-pointer'
                 />
               </form>
             </div>
