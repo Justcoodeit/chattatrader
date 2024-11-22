@@ -73,14 +73,21 @@ export default function TradeConfirmation({
         setStatus('error');
       }
     } else {
+      setIsLoading(true);
       try {
         await createBuy({
-          cancel: true,
+          amount,
+          userId,
+          chatId,
+          cancelled: true,
         });
+        // setStatus('cancelled');
       } catch (error) {
         console.error('Cancel error:', error);
+        setStatus('error');
+      } finally {
+        setIsLoading(false);
       }
-      setStatus('idle');
     }
   };
 
@@ -99,7 +106,9 @@ export default function TradeConfirmation({
       <CardHeader className='space-y-1'>
         <CardTitle className='flex items-center justify-center gap-2'>
           <ArrowRightLeft className='h-5 w-5 text-primary' />
-          <span>Trade Confirmation</span>
+          <span>
+            Trade {status === 'cancelled' ? 'Cancellation' : 'Confirmation'}
+          </span>
         </CardTitle>
       </CardHeader>
 
@@ -245,6 +254,28 @@ export default function TradeConfirmation({
                 </p>
                 <p className='text-sm text-muted-foreground'>
                   Error processing your {type} request. Please try again.
+                </p>
+              </div>
+            </motion.div>
+          )}
+
+          {status === 'cancelled' && (
+            <motion.div
+              key='cancelled'
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className='flex flex-col items-center justify-center gap-4 py-8'
+            >
+              <div className='rounded-full bg-gray-100 p-3'>
+                <AlertCircle className='h-6 w-6 text-gray-600' />
+              </div>
+              <div className='text-center space-y-2'>
+                <p className='text-lg font-medium text-gray-600'>
+                  Trade Cancelled
+                </p>
+                <p className='text-sm text-muted-foreground'>
+                  Your {type} request has been cancelled.
                 </p>
               </div>
             </motion.div>

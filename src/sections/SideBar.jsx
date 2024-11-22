@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Sidebar, SidebarBody, SidebarLink } from '../component/ui/sidebar';
 import { IconArrowLeft, IconBellRinging } from '@tabler/icons-react';
-
+import Cookies from 'js-cookie';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '../libs/utils';
 import { Link } from 'react-router-dom';
@@ -31,151 +31,40 @@ export function SidebarDemo() {
   const savedChatId = localStorage.getItem('currentChatId');
   const { data: getSingleChat } = useGetUserSingleChatWithID(savedChatId);
   const chatHistory = getSingleChat?.data?.data?.caHistory;
-
+  const handleLogout = () => {
+    Cookies.remove('authTokenized');
+    localStorage.removeItem('currentChatId');
+    window.location.href = '/login'; // or use navigate from react-router
+  };
   const links = [
     {
       label: 'Discovery',
-      //   href: '/notification',
-      icon: (
-        <IconBellRinging
-        // className='text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0'
-        />
-      ),
+      icon: <IconBellRinging />,
       component: Discovery,
     },
     {
       label: 'Chat',
-      //   href: '/chat',
-      icon: (
-        <ProfitAnalysis />
-        // <IconMessagePlus className='text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0' />
-      ),
+      icon: <ProfitAnalysis />,
       component: Chat,
     },
     {
       label: 'Wallet',
-      //   href: '/wallet',
-      icon: (
-        <PocketWallet />
-
-        // <IconWallet className='text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0' />
-      ),
+      icon: <PocketWallet />,
       component: Wallet,
     },
     {
       label: 'History',
-      //   href: '/history',
       icon: <CryptoChart />,
       component: History,
     },
-    // {
-    //   label: 'Notification',
-    //   //   href: '/notification',
-    //   icon: (
-    //     <IconBellRinging className='text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0' />
-    //   ),
-    //   component: Notification,
-    // },
-    // {
-    //   label: 'Settings',
-    // //   href: '/settings',
-    //   icon: (
-    //     <IconSettings className='text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0' />
-    //   ),
-    //   component: Settings,
-    // },
+
     {
       label: 'Logout',
-      href: '#',
+      isLogout: true,
+      onClick: handleLogout,
       icon: (
         <IconArrowLeft className='text-neutral-700 h-7 w-7 flex-shrink-0' />
       ),
-    },
-  ];
-
-  const dummyData = [
-    {
-      title: 'Today',
-      chats: [
-        { id: '1', title: 'New chat', date: new Date() },
-        { id: '2', title: 'React Component Optimization', date: new Date() },
-        { id: '3', title: 'API Integration Guide', date: new Date() },
-      ],
-    },
-    {
-      title: 'Yesterday',
-      chats: [
-        {
-          id: '4',
-          title: 'Database Management Tools JSON',
-          date: new Date(Date.now() - 86400000),
-        },
-        {
-          id: '5',
-          title: 'UI/UX Design Principles',
-          date: new Date(Date.now() - 86400000),
-        },
-      ],
-    },
-    {
-      title: 'Previous 7 Days',
-      chats: [
-        {
-          id: '6',
-          title: 'JavaScript ES6 Features',
-          date: new Date(Date.now() - 3 * 86400000),
-        },
-        {
-          id: '7',
-          title: 'Git Workflow Best Practices',
-          date: new Date(Date.now() - 5 * 86400000),
-        },
-        {
-          id: '8',
-          title: 'CSS Grid Layout Tutorial',
-          date: new Date(Date.now() - 6 * 86400000),
-        },
-      ],
-    },
-    {
-      title: 'Previous 30 Days',
-      chats: [
-        {
-          id: '9',
-          title: 'Node.js Performance Tuning',
-          date: new Date(Date.now() - 15 * 86400000),
-        },
-        {
-          id: '10',
-          title: 'GraphQL vs REST API Comparison',
-          date: new Date(Date.now() - 20 * 86400000),
-        },
-        {
-          id: '11',
-          title: 'Docker Container Management',
-          date: new Date(Date.now() - 25 * 86400000),
-        },
-      ],
-    },
-    {
-      title: 'September',
-      chats: [
-        {
-          id: '12',
-          title: 'Machine Learning Basics',
-          date: new Date('2023-09-15'),
-        },
-        {
-          id: '13',
-          title: 'Responsive Web Design Techniques',
-          date: new Date('2023-09-10'),
-        },
-        {
-          id: '14',
-          title: 'TypeScript Advanced Topics',
-          date: new Date('2023-09-05'),
-        },
-      ],
     },
   ];
 
@@ -211,7 +100,13 @@ export function SidebarDemo() {
                   key={idx}
                   link={link}
                   active={activeTab === link.label.toLowerCase()}
-                  onClick={() => handleTabClick(link.label.toLowerCase())}
+                  onClick={() => {
+                    if (link.isLogout || link.onClick) {
+                      link.onClick();
+                    } else {
+                      handleTabClick(link.label.toLowerCase());
+                    }
+                  }}
                 />
               ))}
             </div>
