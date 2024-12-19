@@ -142,37 +142,61 @@ function Message({
   };
 
   const renderAdditionalData = (data) => {
+    if (!data) return null;
+
+    // Helper function to format currency
+    const formatCurrency = (value) => {
+      if (value == null || isNaN(value)) return 'N/A';
+      return `$${Number(value).toLocaleString()}`;
+    };
+
+    // Helper function to format percentage
+    const formatPercentage = (value) => {
+      if (value == null || isNaN(value)) return 'N/A';
+      return `${Number(value).toFixed(2)}%`;
+    };
+
+    // Helper function to format price
+    const formatPrice = (value) => {
+      if (value == null || isNaN(value)) return 'N/A';
+      return `$${Number(value).toFixed(6)}`;
+    };
+
     const stats = [
-      { icon: <Coins className='h-4 w-4' />, label: 'Name', value: data.name },
+      {
+        icon: <Coins className='h-4 w-4' />,
+        label: 'Name',
+        value: data.name || 'N/A',
+      },
       {
         icon: <LinkIcon className='h-4 w-4' />,
         label: 'Chain',
-        value: data.chain,
+        value: data.chain || 'N/A',
       },
       {
         icon: <DollarSign className='h-4 w-4' />,
         label: 'Price',
-        value: `$${data.price.toFixed(6)}`,
+        value: formatPrice(data.price),
       },
       {
         icon: <TrendingUp className='h-4 w-4' />,
         label: 'Market Cap',
-        value: `$${data.mc.toLocaleString()}`,
+        value: formatCurrency(data.mc),
       },
       {
         icon: <Droplets className='h-4 w-4' />,
         label: 'Liquidity',
-        value: `$${data.liquidity.toLocaleString()}`,
+        value: formatCurrency(data.liquidity),
       },
       {
         icon: <BarChart className='h-4 w-4' />,
         label: '1h Change',
-        value: `${data.oneHour.toFixed(2)}%`,
+        value: formatPercentage(data.oneHour),
       },
       {
         icon: <Clock className='h-4 w-4' />,
         label: '24h Change',
-        value: `${data.twentyFourHour.toFixed(2)}%`,
+        value: formatPercentage(data.twentyFourHour),
       },
     ];
 
